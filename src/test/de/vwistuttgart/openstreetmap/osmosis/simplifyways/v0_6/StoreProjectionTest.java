@@ -15,7 +15,7 @@ public class StoreProjectionTest {
 
 	@Test
 	public void simple() {
-		WaySimplifier sut = new WaySimplifier();
+		WaySimplifier sut = new WaySimplifier(1);
 		sut.setSink(new NullWriter());
 		sut.process(new NodeContainer(new Node(1, 1, new Date(), OsmUser.NONE, 1, 1d, 1d)));
 		sut.process(new NodeContainer(new Node(2, 1, new Date(), OsmUser.NONE, 1, 2d, 2.01d)));

@@ -33,13 +33,14 @@ public class WaySimplifier implements SinkSource, EntityProcessor {
 	private GeometryFactory geometryFactory;
 	private DouglasPeuckerSimplifier simplifier;
 
-	public WaySimplifier() {
+	public WaySimplifier(double epsilonMeters) {
 		nodeStore = new IndexedObjectStore<NodeInfo>(
 				new SingleClassObjectSerializationFactory(NodeInfo.class),
 				"wsn");
 
 		geometryFactory = new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING), 4326);
-		simplifier = new DouglasPeuckerSimplifier();
+		double degrees = epsilonMeters * 180 / (6371000 * Math.PI);
+		simplifier = new DouglasPeuckerSimplifier(degrees);
 	}
 
 	@Override

@@ -11,13 +11,18 @@ import com.vividsolutions.jts.geom.PrecisionModel;
 public class DouglasPeuckerSimplifier {
 
 	private GeometryFactory geometryFactory;
+	private double epsilon;
+
+	public DouglasPeuckerSimplifier(double degrees) {
+		this.epsilon = degrees;
+	}
 
 	public List<NodeInfo> simplify(List<NodeInfo> nodes) {
 		geometryFactory = new GeometryFactory(new PrecisionModel(
 				PrecisionModel.FLOATING), 4326);
 		boolean[] vector = new boolean[nodes.size()];
 		Arrays.fill(vector, true);
-		douglasPeucker(nodes, vector, 0, nodes.size(), 0.01d);
+		douglasPeucker(nodes, vector, 0, nodes.size());
 		for (int i = nodes.size() - 1; i >= 0; i--) {
 			if (!vector[i]) {
 				nodes.remove(i);
@@ -27,7 +32,7 @@ public class DouglasPeuckerSimplifier {
 	}
 
 	private void douglasPeucker(List<NodeInfo> nodes,
-			boolean[] inclusionVector, int start, int end, double epsilon) {
+			boolean[] inclusionVector, int start, int end) {
 		double dmax = 0;
 		int index = 0;
 
@@ -47,8 +52,8 @@ public class DouglasPeuckerSimplifier {
 		}
 
 		if (dmax >= epsilon) {
-			douglasPeucker(nodes, inclusionVector, start, index, epsilon);
-			douglasPeucker(nodes, inclusionVector, index, end, epsilon);
+			douglasPeucker(nodes, inclusionVector, start, index);
+			douglasPeucker(nodes, inclusionVector, index, end);
 		} else {
 			for (int i = start + 1; i < end - 1; i++) {
 				inclusionVector[i] = false;

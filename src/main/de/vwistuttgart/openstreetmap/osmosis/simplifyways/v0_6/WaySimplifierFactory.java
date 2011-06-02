@@ -7,11 +7,15 @@ import org.openstreetmap.osmosis.core.pipeline.v0_6.SinkSourceManager;
 
 public class WaySimplifierFactory extends TaskManagerFactory {
 
+	private static final String ARG_EPSILON_METERS = "epsilonMeters";
+	private static final double DEFAULT_EPSILON_METERS = 0.1;
+	
 	@Override
 	protected TaskManager createTaskManagerImpl(
 			TaskConfiguration taskConfiguration) {
+		double epsilonMeters = getDoubleArgument(taskConfiguration, ARG_EPSILON_METERS, DEFAULT_EPSILON_METERS);
 		return new SinkSourceManager(taskConfiguration.getId(),
-				new WaySimplifier(), taskConfiguration.getPipeArgs());
+				new WaySimplifier(epsilonMeters), taskConfiguration.getPipeArgs());
 	}
 
 }
