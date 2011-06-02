@@ -58,6 +58,7 @@ public class WaySimplifier implements SinkSource, EntityProcessor {
 			nodeStoreReader.release();
 		}
 		nodeStore.release();
+		sink.release();
 	}
 
 	@Override
