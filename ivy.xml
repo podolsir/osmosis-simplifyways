@@ -1,0 +1,15 @@
+<ivy-module version="2.0">
+    <info organisation="de.vwistuttgart.openstreetmap" module="osmosis-simplifyways"/>
+    <configurations>
+      <conf name="compile" description="Compiling the main source." />
+      <conf name="runtime" description="Execution" extends="compile" />
+      <conf name="test" visibility="private" description="Testing." extends="runtime" />
+    </configurations>
+    <dependencies>
+      <dependency org="com.jhlabs" name="java-map-proj-lib" rev="20110602" conf="compile->default" />
+      <dependency org="org.openstreetmap.osmosis" name="osmosis-core" rev="0.39" conf="compile->default" />
+      <dependency org="org.openstreetmap.osmosis" name="osmosis-tagfilter" rev="0.39" conf="test->default" />
+      <dependency org="org.openstreetmap.osmosis" name="osmosis-xml" rev="0.39" conf="test->default" />
+      <dependency org="junit" name="junit" rev="4.8.2" conf="test->default" />
+    </dependencies>
+</ivy-module>

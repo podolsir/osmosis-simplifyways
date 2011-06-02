@@ -1,0 +1,151 @@
+<project name="osmosis-simplifyways" default="resolve" xmlns:ivy="antlib:org.apache.ivy.ant">
+	<!-- what version of ivy do we want? -->
+	<property name="ivy.install.version" value="2.2.0" />
+	<property name="ivy.jar.dir" value="${basedir}/ivy" />
+	<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy-${ivy.install.version}.jar" />
+
+	<!-- some variables used -->
+	<property name="lib.dir" value="lib" />
+	<property name="dist.dir" value="dist" />
+	<property name="build.dir" value="build" />
+	<property name="src.dir" value="src/main" />
+	<property name="test.src.dir" value="src/test" />
+	
+	<property name="report.dir" value="report" />
+
+	<!-- paths used for compilation and run  -->
+	<path id="compile.path.id">
+		<fileset dir="${lib.dir}/compile" />
+	</path>
+
+	<path id="compile.test.path.id">
+		<fileset dir="${lib.dir}/test" />
+		<path location="${build.dir}/main" />
+	</path>
+	
+	<path id="run.test.path.id">
+		<path refid="compile.test.path.id" />
+		<path location="${build.dir}/test" />
+	</path>
+
+	<path id="run.path.id">
+		<path refid="compile.path.id" />
+	</path>
+
+	<target name="_get-version" unless="${project.version}">
+		<condition property="git.command" value="git.cmd">
+			<os family="windows" />
+		</condition>
+		<condition property="git.command" value="git">
+			<not><os family="windows" /></not>
+		</condition>
+		
+		<exec executable="${git.command}" dir="${basedir}" outputproperty="git.revision" failonerror="true">
+			<arg value="log"/>
+			<arg value="--pretty=format:%h"/>
+			<arg value="-1"/>
+		</exec>
+		<property name="project.version" value="SNAPSHOT-${git.revision}" />
+	</target>
+			
+	<target name="init-ivy" unless="ivy.initialized">
+		<path id="ivy.lib.path">
+			<fileset dir="${ivy.jar.dir}" includes="*.jar" />
+		</path>
+		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path" />
+		<!-- Override the shared repo location to point at the svn-based ivy repo. -->
+		<property name="ivy.shared.default.artifact.pattern" value="[organisation]/[module]/[revision]/[type]s/[artifact]-[revision].[ext]" />
+		<property name="ivy.shared.default.root" location="${ivy.jar.dir}/repo" />
+		<!--
+		<ivy:configure />
+-->
+		<ivy:configure file="${ivy.jar.dir}/ivysettings.xml" />
+		<!-- Retrieve ivy details from the config file. -->
+		<ivy:info />
+		<property name="ivy.initialized" value="true"/>
+
+	</target>
+
+	<!-- ================================= 
+          target: resolve              
+         ================================= -->
+	<target name="resolve" depends="init-ivy" description="--> retreive dependencies with ivy">
+		<ivy:retrieve pattern="${ivy.lib.dir}/[conf]/[artifact]-[revision].[ext]" />
+	</target>
+
+	<!-- ================================= 
+          target: report              
+         ================================= -->
+
+	<target name="report" depends="resolve" description="--> generates a report of dependencies">
+		<ivy:report todir="${report.dir}/ivy" />
+	</target>
+
+	<!-- ================================= 
+          target: clean              
+         ================================= -->
+	<target name="clean" description="--> clean the project">
+		<delete dir="${build.dir}" includeemptydirs="true" />
+		<delete dir="${lib.dir}" includeemptydirs="true" />
+		<delete dir="${report.dir}" includeemptydirs="true" />
+		<delete dir="${dist.dir}" includeemptydirs="true" />
+	</target>
+
+	<!-- ================================= 
+          target: clean-cache              
+         ================================= -->
+	<target name="clean-cache" depends="init-ivy" description="--> clean the ivy cache">
+
+		<ivy:cleancache />
+	</target>
+	
+	<target name="compile" depends="resolve">
+		<mkdir dir="${build.dir}/main" />
+		<javac destdir="${build.dir}/main" srcdir="${src.dir}">
+			<classpath refid="compile.path.id" /> 
+		</javac>
+		<copy todir="${build.dir}/main">
+			<fileset dir="${src.dir}">
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="compile-tests" depends="resolve,compile">
+		<mkdir dir="${build.dir}/test" />
+		<javac destdir="${build.dir}/test" srcdir="${test.src.dir}">
+			<classpath refid="compile.test.path.id" /> 
+		</javac>
+		<copy todir="${build.dir}/test">
+			<fileset dir="${test.src.dir}">
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="test" depends="compile-tests">
+		<mkdir dir="report/test" />
+		<junit fork="no" maxmemory="512  m" printsummary="on" haltonerror="off" haltonfailure="off" filtertrace="on" failureproperty="test.failure">
+			<formatter type="plain" usefile="true"/>
+			<formatter type="xml" usefile="true"/>
+			<classpath>
+				<path refid="run.test.path.id"/>
+			</classpath>
+			<batchtest todir="${report.dir}/test">
+				<fileset dir="${build.dir}/test">
+					<include name="**/*Test*.class"/>
+					<exclude name="**/TestUtil.class"/>
+					<exclude name="**/*TestSuite*.class"/>
+					<exclude name="**/*$*.class"/>
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+	
+	<target name="jar" depends="compile,_get-version">
+		<jar destfile="${dist.dir}/${ant.project.name}-${project.version}.jar">
+			<fileset dir="${build.dir}/main">
+			</fileset>
+		</jar>
+	</target>
+</project>

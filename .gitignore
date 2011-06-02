@@ -1,0 +1,7 @@
+/lib
+/eclipse
+/build
+/dist
+/report
+/ivy/cache
+*~

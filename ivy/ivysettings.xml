@@ -1,0 +1,4 @@
+<ivysettings>
+	<include url="${ivy.default.settings.dir}/ivysettings.xml"/>
+	<caches defaultCacheDir="${basedir}/ivy/cache" />
+</ivysettings>
