@@ -54,11 +54,6 @@
 		</path>
 		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path" />
 		<!-- Override the shared repo location to point at the svn-based ivy repo. -->
-		<property name="ivy.shared.default.artifact.pattern" value="[organisation]/[module]/[revision]/[type]s/[artifact]-[revision].[ext]" />
-		<property name="ivy.shared.default.root" location="${ivy.jar.dir}/repo" />
-		<!--
-		<ivy:configure />
--->
 		<ivy:configure file="${ivy.jar.dir}/ivysettings.xml" />
 		<!-- Retrieve ivy details from the config file. -->
 		<ivy:info />
