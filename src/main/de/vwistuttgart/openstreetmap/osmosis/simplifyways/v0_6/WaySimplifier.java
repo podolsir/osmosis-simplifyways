@@ -22,7 +22,13 @@ import de.vwistuttgart.openstreetmap.osmosis.simplifyways.v0_6.impl.NodeInfo;
 
 /**
  * Simplifies way geometry by running a Douglas-Peucker algorithm over them with
- * a specififed preciison.
+ * a specififed precision.
+ * 
+ * The current implementation does not cache the data in an intermediate store.
+ * 
+ * Required stream order: nodes, then ways.
+ * Output stream order: ways, then nodes.
+ * 
  * 
  * @author Igor Podolskiy
  */
@@ -34,7 +40,13 @@ public class WaySimplifier implements SinkSource, EntityProcessor {
 	private DouglasPeuckerSimplifier simplifier;
 
 	private static final long SPHEROID_RADIUS = 6371000;
-	
+
+	/**
+	 * Creates a new way simplifier.
+	 * 
+	 * @param epsilonMeters
+	 *            the maximum acceptable deviation from the original way.
+	 */
 	public WaySimplifier(double epsilonMeters) {
 		nodeStore = new IndexedObjectStore<NodeInfo>(
 				new SingleClassObjectSerializationFactory(NodeInfo.class),
