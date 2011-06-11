@@ -17,30 +17,31 @@ import org.openstreetmap.osmosis.core.store.SingleClassObjectSerializationFactor
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 import org.openstreetmap.osmosis.core.task.v0_6.SinkSource;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.PrecisionModel;
-
 import de.vwistuttgart.openstreetmap.osmosis.simplifyways.v0_6.impl.DouglasPeuckerSimplifier;
 import de.vwistuttgart.openstreetmap.osmosis.simplifyways.v0_6.impl.NodeInfo;
 
+/**
+ * Simplifies way geometry by running a Douglas-Peucker algorithm over them with
+ * a specififed preciison.
+ * 
+ * @author Igor Podolskiy
+ */
 public class WaySimplifier implements SinkSource, EntityProcessor {
 
 	private Sink sink;
 	private IndexedObjectStore<NodeInfo> nodeStore;
 	private IndexedObjectStoreReader<NodeInfo> nodeStoreReader;
-	private GeometryFactory geometryFactory;
 	private DouglasPeuckerSimplifier simplifier;
 
+	private static final long SPHEROID_RADIUS = 6371000;
+	
 	public WaySimplifier(double epsilonMeters) {
 		nodeStore = new IndexedObjectStore<NodeInfo>(
 				new SingleClassObjectSerializationFactory(NodeInfo.class),
 				"wsn");
 
-		geometryFactory = new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING), 4326);
-		double degrees = epsilonMeters * 180 / (6371000 * Math.PI);
-		simplifier = new DouglasPeuckerSimplifier(degrees);
+		double epsilonDegrees = epsilonMeters * 180 / (SPHEROID_RADIUS * Math.PI);
+		simplifier = new DouglasPeuckerSimplifier(epsilonDegrees);
 	}
 
 	@Override
@@ -75,8 +76,7 @@ public class WaySimplifier implements SinkSource, EntityProcessor {
 	@Override
 	public void process(NodeContainer nodeContainer) {
 		Node n = nodeContainer.getEntity();
-		Point point = geometryFactory.createPoint(new Coordinate(n.getLongitude(), n.getLatitude()));
-		nodeStore.add(n.getId(), new NodeInfo(n.getId(), point));
+		nodeStore.add(n.getId(), new NodeInfo(n.getId(), n.getLatitude(), n.getLongitude()));
 		sink.process(nodeContainer);
 	}
 

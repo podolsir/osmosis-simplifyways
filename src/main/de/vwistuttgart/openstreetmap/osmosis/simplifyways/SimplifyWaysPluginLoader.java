@@ -8,6 +8,12 @@ import org.openstreetmap.osmosis.core.plugin.PluginLoader;
 
 import de.vwistuttgart.openstreetmap.osmosis.simplifyways.v0_6.WaySimplifierFactory;
 
+/**
+ * Plugin loader for the simplify ways tasks.
+ * 
+ * @author Igor Podolskiy
+ *
+ */
 public class SimplifyWaysPluginLoader implements PluginLoader{
 
 	@Override

@@ -15,11 +15,12 @@ public class DouglasPeuckerSimplifier {
 
 	public DouglasPeuckerSimplifier(double degrees) {
 		this.epsilon = degrees;
+		geometryFactory = new GeometryFactory(new PrecisionModel(
+				PrecisionModel.FLOATING), 4326);
 	}
 
 	public List<NodeInfo> simplify(List<NodeInfo> nodes) {
-		geometryFactory = new GeometryFactory(new PrecisionModel(
-				PrecisionModel.FLOATING), 4326);
+
 		boolean[] vector = new boolean[nodes.size()];
 		Arrays.fill(vector, true);
 		douglasPeucker(nodes, vector, 0, nodes.size());
@@ -39,12 +40,12 @@ public class DouglasPeuckerSimplifier {
 		NodeInfo first = nodes.get(start);
 		NodeInfo last = nodes.get(end - 1);
 		LineString ls = geometryFactory.createLineString(new Coordinate[] {
-				first.getCoordinates().getCoordinate(),
-				last.getCoordinates().getCoordinate() });
+				first.getCoordinates(), last.getCoordinates()
+				});
 
 		for (int i = start + 1; i < end - 1; i++) {
 			NodeInfo p = nodes.get(i);
-			double distance = p.getCoordinates().distance(ls);
+			double distance = geometryFactory.createPoint(p.getCoordinates()).distance(ls);
 			if (distance > dmax) {
 				dmax = distance;
 				index = i;
