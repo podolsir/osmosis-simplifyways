@@ -13,7 +13,6 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
-import org.openstreetmap.osmosis.core.misc.v0_6.NullWriter;
 
 import de.vwistuttgart.openstreetmap.osmosis.test.task.v0_6.SinkEntityInspector;
 
