@@ -4,9 +4,10 @@
       <conf name="compile" description="Compiling the main source." />
       <conf name="runtime" description="Execution" extends="compile" />
       <conf name="test" visibility="private" description="Testing." extends="runtime" />
+      <conf name="dist" description="Libraries that must be distributed." />
     </configurations>
     <dependencies>
-	  <dependency org="com.vividsolutions" name="jts" rev="1.11" conf="compile->default" />
+	  <dependency org="com.vividsolutions" name="jts" rev="1.11" conf="compile->default;dist->default" />
       <dependency org="org.openstreetmap.osmosis" name="osmosis-core" rev="0.39" conf="compile->default" />
       <dependency org="org.openstreetmap.osmosis" name="osmosis-tagfilter" rev="0.39" conf="test->default" />
       <dependency org="org.openstreetmap.osmosis" name="osmosis-xml" rev="0.39" conf="test->default" />

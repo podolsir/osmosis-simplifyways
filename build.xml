@@ -143,4 +143,15 @@
 			</fileset>
 		</jar>
 	</target>
+	
+	<target name="dist" depends="jar">
+		<zip destfile="${dist.dir}/${ant.project.name}-${project.version}.zip">
+			<fileset dir="${dist.dir}">
+				<include name="${ant.project.name}-${project.version}.jar" />
+			</fileset>
+			<fileset dir="${lib.dir}/dist">
+				<exclude name="xerces*.jar" />
+			</fileset>
+		</zip>
+	</target>
 </project>
