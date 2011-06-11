@@ -1,6 +1,6 @@
 osmosis-simplifyways
 ====================
-Way simplification plugin for Osmosis
+Way Simplification Plugin for Osmosis
 =====================================
 
 Summary
@@ -61,8 +61,10 @@ Note that this does not apply to the JTS library which is licensed under LGPL.
 DISCLAIMER:
 By making osmosis-simplifyways publicly available, it is hoped that users will find the
 software useful.  However:
+
 * osmosis-simplifyways comes without any warranty, to the extent permitted by applicable
 law.
+
 * Unless required by applicable law, no liability will be accepted by
 the authors and distributors of this software for any damages caused
 as a result of its use. 
