@@ -158,7 +158,7 @@
 				<exclude name="xerces*.jar" />
 			</fileset>
 		</copy>
-		<zip destfile="${dist.dir}/${ant.project.name}-${project.version}.zip">
+		<zip destfile="${dist.dir}/${ant.project.name}-${project.version}-bin.zip">
 			<fileset dir="${dist.dir}">
 				<include name="${ant.project.name}-${project.version}.jar" />
 			</fileset>
