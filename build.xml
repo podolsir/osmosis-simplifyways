@@ -1,4 +1,4 @@
-<project name="osmosis-simplifyways" default="resolve" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="osmosis-simplifyways" default="jar" xmlns:ivy="antlib:org.apache.ivy.ant">
 	<!-- what version of ivy do we want? -->
 	<property name="ivy.install.version" value="2.2.0" />
 	<property name="ivy.jar.dir" value="${basedir}/ivy" />
@@ -101,7 +101,7 @@
 		<ivy:cleancache />
 	</target>
 	
-	<target name="compile" depends="resolve">
+	<target name="compile" depends="resolve" description="--> compile the project">
 		<mkdir dir="${build.dir}/main" />
 		<javac destdir="${build.dir}/main" srcdir="${src.dir}">
 			<classpath refid="compile.path.id" /> 
@@ -125,7 +125,7 @@
 		</copy>
 	</target>
 	
-	<target name="test" depends="compile-tests">
+	<target name="test" depends="compile-tests" description="--> compile and run the unit tests">
 		<mkdir dir="report/test" />
 		<junit fork="no" maxmemory="512  m" printsummary="on" haltonerror="off" haltonfailure="off" filtertrace="on" failureproperty="test.failure">
 			<formatter type="plain" usefile="true"/>
@@ -144,14 +144,14 @@
 		</junit>
 	</target>
 	
-	<target name="jar" depends="compile,_get-version">
+	<target name="jar" depends="compile,_get-version" description="--> create the jar file">
 		<jar destfile="${dist.dir}/${ant.project.name}-${project.version}.jar">
 			<fileset dir="${build.dir}/main">
 			</fileset>
 		</jar>
 	</target>
 	
-	<target name="dist" depends="jar">
+	<target name="dist" depends="jar" description="--> create a distribution">
 		<copy todir="${dist.dir}">
 			<fileset dir="${lib.dir}/dist">
 				<exclude name="xerces*.jar" />
