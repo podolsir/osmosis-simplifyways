@@ -40,7 +40,9 @@
 			<not><os family="windows" /></not>
 		</condition>
 		
-		<exec executable="${git.command}" dir="${basedir}" outputproperty="git.revision" failonerror="false">
+		<exec  executable="${git.command}" dir="${basedir}" outputproperty="git.revision" 
+			failonerror="false" failifexecutionfails="false" resultproperty="git.returncode"
+			>
 			<arg value="describe"/>
 			<arg value="--always"/>
 		</exec>
@@ -50,9 +52,8 @@
 			value="${git.revision}" 
 			else="SNAPSHOT-${DSTAMP}">
 
-			<isset property="git.revision" />
+			<not><isfailure code="${git.returncode}" /></not>
 		</condition>	
-		<property name="project.version" value="${git.revision}" />
 	</target>
 			
 	<target name="init-ivy" unless="ivy.initialized">
