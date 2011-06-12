@@ -11,7 +11,7 @@ Summary
 About
 -----
 
-This plugin simplifies the way geometry by removing some intermediate nodes. The underlying simplification/algorithm used is the Ramer-Douglas-Peucker algorithm. A maximum deviation from the original way geometry can be passed as a parameter to control the number of nodes removed. The [JTS library](http://www.vividsolutions.com/jts/) is used for the geometry computations.
+This plugin simplifies the way geometry by removing some intermediate nodes. The underlying simplification/algorithm used is the Ramer-Douglas-Peucker algorithm. A maximum deviation from the original way geometry can be passed as a parameter to control the number of nodes removed. The [JTS library](http://tsusiatsoftware.net/jts/main.html) is used for the geometry computations.
 
 Building and Installation
 -------------------------
