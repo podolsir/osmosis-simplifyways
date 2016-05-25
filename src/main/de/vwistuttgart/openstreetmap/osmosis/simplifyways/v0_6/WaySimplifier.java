@@ -2,6 +2,7 @@ package de.vwistuttgart.openstreetmap.osmosis.simplifyways.v0_6;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
@@ -119,4 +120,7 @@ public class WaySimplifier implements SinkSource, EntityProcessor {
 		sink.process(relationContainer);
 	}
 
+	@Override
+	public void initialize(Map<String, Object> metaData) {
+	}
 }
