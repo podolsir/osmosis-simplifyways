@@ -14,6 +14,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.store.IndexedObjectStore;
 import org.openstreetmap.osmosis.core.store.IndexedObjectStoreReader;
+import org.openstreetmap.osmosis.core.store.NoSuchIndexElementException;
 import org.openstreetmap.osmosis.core.store.SingleClassObjectSerializationFactory;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 import org.openstreetmap.osmosis.core.task.v0_6.SinkSource;
@@ -103,7 +104,11 @@ public class WaySimplifier implements SinkSource, EntityProcessor {
 		List<WayNode> wayNodes = wayContainer.getEntity().getWayNodes();
 		List<NodeInfo> realWayNodes = new ArrayList<NodeInfo>(wayNodes.size());
 		for (WayNode wayNode : wayNodes) {
-			realWayNodes.add(nodeStoreReader.get(wayNode.getNodeId()));
+			try {
+				realWayNodes.add(nodeStoreReader.get(wayNode.getNodeId()));
+			} catch (NoSuchIndexElementException e)
+			{
+			}
 		}
 		
 		simplifier.simplify(realWayNodes);
